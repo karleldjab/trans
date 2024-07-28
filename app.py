@@ -4,6 +4,9 @@ import os
 
 app = Flask(__name__)
 
+WHISPER_PATH = "/home/kali/whisper.cpp"  # Path to the Whisper.cpp directory
+WHISPER_BINARY = os.path.join(WHISPER_PATH, "main")  # Path to the Whisper binary
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -12,27 +15,28 @@ def home():
 def transcribe():
     try:
         if 'file' not in request.files:
-            return jsonify({'error': 'Aucun fichier envoyé'}), 400
+            return jsonify({'error': 'No file uploaded'}), 400
         
         file = request.files['file']
         if file.filename == '':
-            return jsonify({'error': 'Aucun fichier sélectionné'}), 400
+            return jsonify({'error': 'No file selected'}), 400
 
-        # Enregistrer le fichier temporairement
+        # Save the file temporarily
         file_path = os.path.join("temp_files", file.filename)
         file.save(file_path)
         
-        # Appeler Whisper.cpp pour transcrire le fichier audio
+        # Call Whisper.cpp to transcribe the audio file
         result = subprocess.run(
-            ["./main", "-f", file_path], 
+            [WHISPER_BINARY, "-f", file_path], 
             capture_output=True, 
-            text=True
+            text=True,
+            cwd=WHISPER_PATH  # Ensure the command runs in the correct directory
         )
         
-        # Récupérer la sortie de Whisper.cpp
+        # Get the transcription result
         transcription = result.stdout.strip()
         
-        # Supprimer le fichier temporaire après transcription
+        # Delete the temporary file after transcription
         os.remove(file_path)
         
         return jsonify({'transcription': transcription})
