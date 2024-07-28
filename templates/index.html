@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Recorder and Text Summarizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Audio Recorder and Text Summarizer</h1>
+        <textarea id="text-area" cols="30" rows="10"></textarea>
+        <button id="record-button">Start Recording</button>
+        <button id="upload-audio-button">Upload Audio File</button>
+        <button id="upload-image-button">Upload Image</button>
+        <button id="summarize-button">Summarize Text</button>
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
